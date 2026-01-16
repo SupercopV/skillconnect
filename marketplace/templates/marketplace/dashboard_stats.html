@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>📊 Statistics · SkillConnect</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Poppins,system-ui;
+    background:linear-gradient(135deg,#020617,#0ea5e9,#6366f1,#22c55e,#f97316);
+    background-size:350% 350%;
+    animation:bgMove 18s ease infinite;
+    padding:30px;
+    color:#e5e7eb;
+  }
+  @keyframes bgMove{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
+  .wrap{max-width:1150px;margin:0 auto}
+  .title{font-size:26px;font-weight:800;margin-bottom:8px;}
+  .sub{opacity:.85;font-size:13px;margin-bottom:18px}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+  }
+  @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+
+  .card{
+    background:rgba(15,23,42,.95);
+    border:1px solid rgba(148,163,184,.4);
+    border-radius:18px;
+    padding:14px;
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
+    transform:translateY(12px);
+    opacity:0;
+    animation:fadeUp .7s forwards;
+  }
+  @keyframes fadeUp{to{transform:translateY(0);opacity:1}}
+  .label{font-size:12px;color:#9ca3af;margin-bottom:4px}
+  .value{font-size:22px;font-weight:800}
+  .tag{
+    margin-top:8px;
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:11px;
+    background:rgba(34,197,94,.18);
+    color:#bbf7d0;
+  }
+
+  /* ✅ CHART CARDS */
+  .chart-grid{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:14px;
+  }
+  @media(max-width:900px){.chart-grid{grid-template-columns:1fr}}
+
+  .chart-grid1{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:14px;
+  }
+  @media(max-width:900px){.chart-grid{grid-template-columns:1fr}}
+
+  .chart-card{
+    background:rgba(15,23,42,.95);
+    border:1px solid rgba(148,163,184,.35);
+    border-radius:18px;
+    padding:14px;
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
+    animation:fadeUp .7s forwards;
+    width: 550px;
+  }
+
+  .chart-card1{
+    background:rgba(15,23,42,.95);
+    border:1px solid rgba(148,163,184,.35);
+    border-radius:18px;
+    padding:14px;
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
+    animation:fadeUp .7s forwards;
+
+  }
+  .chart-title{
+    font-weight:800;
+    margin-bottom:10px;
+  }
+
+  .back{
+    display:inline-block;
+    margin-top:20px;
+    padding:10px 16px;
+    border-radius:999px;
+    background:rgba(15,23,42,.9);
+    border:1px solid rgba(148,163,184,.4);
+    color:#e5e7eb;
+    text-decoration:none;
+    font-weight:600;
+  }
+
+  /* ✅ EARNINGS CARD */
+  .earnings-card{
+    margin-top:16px;
+    padding:16px;
+    border-radius:18px;
+    background:linear-gradient(135deg, rgba(34,197,94,.2), rgba(59,130,246,.15));
+    border:1px solid rgba(148,163,184,.35);
+    box-shadow:0 20px 60px rgba(0,0,0,.65);
+  }
+  .earn-title{font-weight:900;font-size:16px}
+  .earn-amt{font-size:28px;font-weight:900;margin-top:4px}
+  .earn-sub{opacity:.85;font-size:12px;margin-top:4px}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="title">📊 {{ role }} Statistics</div>
+  <div class="sub">All your important numbers in one place.</div>
+
+  <!-- ✅ EARNINGS ANALYTICS -->
+  <div class="earnings-card">
+    <div class="earn-title">💰 Earnings Analytics</div>
+
+    {% if role == "Recruiter" %}
+      <div class="earn-amt">₹ {{ total_paid_amount }}</div>
+      <div class="earn-sub">Total amount paid to freelancers (Paid payments only).</div>
+    {% else %}
+      <div class="earn-amt">₹ {{ total_received_amount }}</div>
+      <div class="earn-sub">Total earnings received from recruiters (Paid payments only).</div>
+    {% endif %}
+  </div>
+
+  <!-- ✅ STAT CARDS -->
+  <div class="grid" style="margin-top:18px;">
+
+    {% if role == "Recruiter" %}
+      <div class="card"><div class="label">Total Jobs</div><div class="value">{{ total_jobs }}</div><span class="tag">Jobs</span></div>
+      <div class="card"><div class="label">Open Jobs</div><div class="value">{{ open_jobs }}</div><span class="tag">Open</span></div>
+      <div class="card"><div class="label">In Progress Jobs</div><div class="value">{{ inprogress_jobs }}</div><span class="tag">Working</span></div>
+      <div class="card"><div class="label">Completed Jobs</div><div class="value">{{ completed_jobs }}</div><span class="tag">Finished</span></div>
+
+      <div class="card"><div class="label">Total Proposals</div><div class="value">{{ total_proposals }}</div><span class="tag">Proposals</span></div>
+      <div class="card"><div class="label">Pending Proposals</div><div class="value">{{ pending_proposals }}</div><span class="tag">Review</span></div>
+      <div class="card"><div class="label">Accepted</div><div class="value">{{ accepted_proposals }}</div><span class="tag">Hired</span></div>
+      <div class="card"><div class="label">Rejected</div><div class="value">{{ rejected_proposals }}</div><span class="tag">Declined</span></div>
+
+    {% else %}
+      <div class="card"><div class="label">Total Proposals</div><div class="value">{{ total_proposals }}</div><span class="tag">Applied</span></div>
+      <div class="card"><div class="label">Pending</div><div class="value">{{ pending_proposals }}</div><span class="tag">Waiting</span></div>
+      <div class="card"><div class="label">Accepted</div><div class="value">{{ accepted_proposals }}</div><span class="tag">Won</span></div>
+      <div class="card"><div class="label">Rejected</div><div class="value">{{ rejected_proposals }}</div><span class="tag">Declined</span></div>
+
+      <div class="card"><div class="label">Active Contracts</div><div class="value">{{ active_contracts }}</div><span class="tag">In Progress</span></div>
+      <div class="card"><div class="label">Assignments</div><div class="value">{{ total_assignments }}</div><span class="tag">Tasks</span></div>
+      <div class="card"><div class="label">Interviews</div><div class="value">{{ total_interviews }}</div><span class="tag">Scheduled</span></div>
+      <div class="card"><div class="label">Chats</div><div class="value">{{ chats }}</div><span class="tag">Conversations</span></div>
+    {% endif %}
+
+  </div>
+
+  <!-- ✅ CHARTS -->
+  <div class="chart-grid">
+
+    <!-- Pie Chart -->
+    <div class="chart-card">
+      <div class="chart-title">🥧 Proposal Status (Pie Chart)</div>
+      <canvas id="pieChart"></canvas>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="chart-card">
+      <div class="chart-title">📊 Weekly Activity (Last 7 Days)</div>
+      <canvas id="weeklyChart"></canvas>
+    </div>
+
+    <!-- Success Rate Gauge -->
+   <div class="chart-card1">
+    <div class="chart-title">🎯 Success Rate Gauge</div>
+    <div style="text-align:center; font-weight:800; font-size:22px; margin-bottom:10px;">
+        {{ success_rate }}%
+    </div>
+    <canvas id="successGauge"></canvas>
+   </div>
+
+
+
+  </div>
+
+  <!-- Back redirect based on role -->
+  {% if role == "Recruiter" %}
+    <a href="{% url 'recruiter_dashboard' %}" class="back">⬅ Back to Dashboard</a>
+  {% else %}
+    <a href="{% url 'freelancer_dashboard' %}" class="back">⬅ Back to Dashboard</a>
+  {% endif %}
+</div>
+
+
+<script>
+  // ✅ Pie chart
+  const pieCtx = document.getElementById("pieChart");
+
+  new Chart(pieCtx, {
+    type: "pie",
+    data: {
+      labels: ["Pending", "Accepted", "Rejected"],
+      datasets: [{
+        data: [
+            {{ pending_proposals|default:0 }},
+            {{ accepted_proposals|default:0 }},
+            {{ rejected_proposals|default:0 }}
+        ]
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { labels: { color: "#e5e7eb" } }
+      }
+    }
+  });
+
+  // ✅ Weekly chart
+  const weeklyCtx = document.getElementById("weeklyChart");
+
+  const weeklyLabels = {{ weekly_labels|safe }};
+  const proposalsWeek = {{ proposals_weekly_counts|safe }};
+
+  {% if role == "Recruiter" %}
+    const jobsWeek = {{ jobs_weekly_counts|safe }};
+  {% else %}
+    const jobsWeek = [];
+  {% endif %}
+
+  new Chart(weeklyCtx, {
+    type: "bar",
+    data: {
+      labels: weeklyLabels,
+      datasets: [
+        {
+          label: "Proposals",
+          data: proposalsWeek,
+        },
+        {% if role == "Recruiter" %}
+        {
+          label: "Jobs Created",
+          data: jobsWeek,
+        }
+        {% endif %}
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: "#e5e7eb" } }
+      },
+      scales: {
+        x: { ticks: { color: "#e5e7eb" } },
+        y: { ticks: { color: "#e5e7eb" } }
+      }
+    }
+  });
+
+  // ✅ Success rate gauge (meter style)
+const gaugeCtx = document.getElementById("successGauge");
+
+const rate = {{ success_rate|default:0 }};
+const remain = 100 - rate;
+
+new Chart(gaugeCtx, {
+  type: "doughnut",
+  data: {
+    labels: ["Success", "Remaining"],
+    datasets: [{
+      data: [rate, remain],
+      borderWidth: 0,
+      cutout: "75%",
+      rotation: -90,
+      circumference: 180
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { display: false }
+    }
+  }
+});
+
+
+
+
+</script>
+
+</body>
+</html>
+

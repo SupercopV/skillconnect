@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>🗓️ Interviews · SkillConnect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  min-height: 100vh;
+  background: linear-gradient(135deg, #020617, #0ea5e9, #6366f1, #22c55e, #f97316);
+  background-size: 350% 350%;
+  animation: bgMove 18s ease infinite;
+  color: #e5e7eb;
+  justify-content: center;
+  margin:0;
+  font-family:Poppins,system-ui;
+  display:flexbox;
+}
+
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* PAGE TITLE */
+.page-title{
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:18px;
+}
+
+/* GRID */
+.interview-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(135deg,#020617,#0f172a);
+  border-radius:18px;
+  padding:16px;
+  border:1px solid rgba(148,163,184,.15);
+  box-shadow:0 18px 40px rgba(0,0,0,.6);
+  animation:fadeUp .5s ease;
+  transition:.3s;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 30px 70px rgba(0,0,0,.9);
+}
+
+/* JOB TITLE */
+.job-title{
+  font-weight:600;
+  font-size:16px;
+  margin-bottom:6px;
+  color:#a5b4fc;
+}
+
+/* DETAILS */
+.detail{
+  font-size:13px;
+  opacity:.9;
+  margin:3px 0;
+}
+
+/* BADGES */
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  margin-top:10px;
+}
+
+.badge.scheduled{
+  background:rgba(59,130,246,.2);
+  color:#bfdbfe;
+}
+
+.badge.completed{
+  background:rgba(34,197,94,.2);
+  color:#bbf7d0;
+}
+
+.badge.cancelled{
+  background:rgba(239,68,68,.2);
+  color:#fecaca;
+}
+
+/* MEETING BUTTON */
+.meeting-btn{
+  display:inline-block;
+  margin-top:10px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#022c22;
+  font-size:13px;
+  font-weight:600;
+  text-decoration:none;
+  transition:.25s;
+}
+
+.meeting-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px rgba(34,197,94,.8);
+}
+
+/* EMPTY */
+.empty{
+  opacity:.6;
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-title">🗓️ Scheduled Interviews</div>
+
+<div class="interview-grid">
+
+{% for i in interviews %}
+  <div class="card">
+    <div class="job-title">{{ i.job.title }}</div>
+
+    <div class="detail">👤 Freelancer: {{ i.freelancer.first_name }}</div>
+    <div class="detail">📅 Date: {{ i.interview_date }}</div>
+    <div class="detail">⏰ Time: {{ i.interview_time }}</div>
+    <div class="detail">🎥 Mode: {{ i.get_mode_display }}</div>
+
+    {% if i.meeting_link %}
+      <a href="{{ i.meeting_link }}" target="_blank" class="meeting-btn">
+        🔗 Join Meeting
+      </a>
+    {% endif %}
+
+    {% if i.status == "scheduled" and request.user == i.recruiter %}
+  <a href="{% url 'interview_complete' i.id %}"
+     class="meeting-btn"
+     style="background:linear-gradient(135deg,#22c55e,#16a34a)">
+     ✅ Mark Completed
+  </a>
+{% endif %}
+
+
+    <div class="badge {{ i.status }}">
+      {{ i.get_status_display }}
+    </div>
+  </div>
+{% empty %}
+  <div class="empty">No interviews scheduled</div>
+{% endfor %}
+
+</div>
+
+</body>
+</html>
+

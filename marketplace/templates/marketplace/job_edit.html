@@ -1,0 +1,251 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Job · SkillConnect</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,system-ui}
+    body{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:30px;
+      background:linear-gradient(135deg,#020617,#0ea5e9,#6366f1,#22c55e,#f97316);
+      background-size:350% 350%;
+      animation:bgMove 18s ease infinite;
+      color:#e5e7eb;
+    }
+
+    @keyframes bgMove{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    .edit-wrap{
+      width:100%;
+      max-width:850px;
+      position:relative;
+    }
+
+    .card{
+      background:rgba(15,23,42,0.95);
+      border:1px solid rgba(148,163,184,0.45);
+      padding:26px 24px;
+      border-radius:22px;
+      box-shadow:0 24px 70px rgba(0,0,0,0.85);
+      overflow:hidden;
+      animation:fadeIn .8s ease;
+      position:relative;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(20px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    /* glowing circles */
+    .glow{
+      position:absolute;
+      width:240px;
+      height:240px;
+      border-radius:50%;
+      filter:blur(45px);
+      opacity:0.28;
+      z-index:0;
+      animation:pulseGlow 5s ease-in-out infinite alternate;
+    }
+
+    .g1{background:#22c55e;top:-90px;left:-70px}
+    .g2{background:#3b82f6;bottom:-90px;right:-80px}
+    .g3{background:#a855f7;top:40%;right:-100px;opacity:0.18}
+
+    @keyframes pulseGlow{
+      from{transform:scale(1)}
+      to{transform:scale(1.15)}
+    }
+
+    .inner{
+      position:relative;
+      z-index:2;
+    }
+
+    .title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .title h2{
+      font-size:24px;
+      font-weight:800;
+      color:#fff;
+    }
+
+    .subtitle{
+      font-size:13px;
+      color:#94a3b8;
+      margin-top:4px;
+    }
+
+    /* form fields */
+    form{
+      margin-top:18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    form p{
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    label{
+      font-size:12px;
+      font-weight:600;
+      color:#e2e8f0;
+    }
+
+    input, textarea, select{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,0.35);
+      background:rgba(2,6,23,0.7);
+      color:#e5e7eb;
+      font-size:14px;
+      outline:none;
+      transition:0.2s ease;
+    }
+
+    textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
+    input:focus, textarea:focus, select:focus{
+      border-color:#22c55e;
+      box-shadow:0 0 0 2px rgba(34,197,94,0.35);
+      transform:translateY(-2px);
+    }
+
+    /* buttons */
+    .actions{
+      display:flex;
+      gap:12px;
+      justify-content:flex-end;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      padding:11px 20px;
+      border-radius:999px;
+      font-weight:700;
+      border:none;
+      cursor:pointer;
+      font-size:13px;
+      transition:0.2s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .btn-save{
+      background:linear-gradient(135deg,#22c55e,#16a34a);
+      color:#022c22;
+      box-shadow:0 16px 40px rgba(34,197,94,0.55);
+    }
+
+    .btn-save:hover{
+      transform:translateY(-2px) scale(1.03);
+      box-shadow:0 22px 50px rgba(34,197,94,0.8);
+    }
+
+    .btn-cancel{
+      background:rgba(15,23,42,0.85);
+      color:#e5e7eb;
+      border:1px solid rgba(148,163,184,0.35);
+    }
+
+    .btn-cancel:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 28px rgba(0,0,0,0.65);
+    }
+
+    /* error display */
+    .errors{
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(185,28,28,0.20);
+      border:1px solid rgba(248,113,113,0.7);
+      color:#fee2e2;
+      font-size:12px;
+      margin-top:6px;
+    }
+
+    /* mobile */
+    @media(max-width:600px){
+      .title h2{font-size:20px}
+      .card{padding:18px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="edit-wrap">
+  <div class="card">
+
+    <!-- glows -->
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+
+    <div class="inner">
+
+      <div class="title">
+        <div>
+          <h2>✏️ Edit Job</h2>
+          <div class="subtitle">Update details for: <b>{{ job.title }}</b></div>
+        </div>
+        <div style="font-size:12px;color:#94a3b8;">
+          SkillConnect
+        </div>
+      </div>
+
+      {% if form.errors %}
+        <div class="errors">
+          <b>⚠ Please fix errors:</b>
+          {{ form.errors }}
+        </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="actions">
+          <a href="{% url 'job_detail' job.pk %}" class="btn btn-cancel">⬅ Cancel</a>
+          <button type="submit" class="btn btn-save">✅ Save Changes</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+
